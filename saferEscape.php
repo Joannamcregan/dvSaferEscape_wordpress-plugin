@@ -42,7 +42,7 @@ class DVSaferEscapePlugin {
                         <button id="dvSaferEscape_bing" class="dvSaferEscape_search-options" aria-label="not selected">Bing</button>
                         <button id="dvSaferEscape_duckduckgo" class="dvSaferEscape_search-options" aria-label="not selected">DuckDuckGo</button>
                     </div>
-                    <input type="text" id="dvSaferSearch_search-input">
+                    <input type="text" id="dvSaferSearch_search-input" placeholder="baby sloths">
                 </div>                
                 <p>
                     We will redirect you to a search results page if we detect any sudden jerking motions from your mobile phone. If you are using an iPhone, please tap <span id="dvSaferEscape_iphone-prompt">here</span> so we can ask you for permission to access information about your device’s motion.
