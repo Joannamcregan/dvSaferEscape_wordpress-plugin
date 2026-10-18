@@ -8,9 +8,15 @@
     bottom: 2px;
     background: rgba(250, 250, 250, 0.98);
     padding-bottom: 60px;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 500ms ease-in, visibility 0ms ease-in 250ms;
+    transition-delay: 700ms;
 }
 #dvSaferEscape_safety-overlay.dvSaferEscape_hidden{
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
 }
 #dvSaferEscape_safety-info{
     background: white;

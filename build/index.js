@@ -20,17 +20,37 @@ __webpack_require__.r(__webpack_exports__);
 
 class SaferRedirect {
   constructor() {
+    this.overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-overlay');
+    this.overlayClose = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-overlay-close');
+    this.events();
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState !== "visible") {
         this.gtfo();
       }
     });
+    window.onload = () => {
+      console.log('load on');
+      let searchTerm = localStorage.getItem('searchTerm');
+      console.log('search term is ' + searchTerm);
+      if (searchTerm == "" || searchTerm == null) {
+        this.openSaferEscapeOverlay();
+      }
+    };
+  }
+  events() {
+    this.overlayClose.on('click', this.closeSaferEscapeOverlay.bind(this));
   }
   gtfo() {
     let searchDestination = localStorage.getItem('searchEngine') ? "https://" + localStorage.getItem('searchEngine') + ".com" : "https://google.com";
     searchDestination += '/search?q=';
     searchDestination += localStorage.getItem('searchString') ? localStorage.getItem('searchString').replace(/ /g, '+') : "baby+sloths";
     console.log('gtfo and going to ' + searchDestination);
+  }
+  closeSaferEscapeOverlay() {
+    this.overlay.addClass('dvSaferEscape_hidden');
+  }
+  openSaferEscapeOverlay() {
+    this.overlay.removeClass('dvSaferEscape_hidden');
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SaferRedirect);

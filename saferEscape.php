@@ -24,7 +24,7 @@ class DVSaferEscapePlugin {
     }
 
     function addSaferEscapeInstructionsOverlay(){
-        ?><div id="dvSaferEscape_safety-overlay" >
+        ?><div id="dvSaferEscape_safety-overlay" class="dvSaferEscape_hidden">
             <span id="dvSaferEscape_safety-overlay-close">close</span>
             <div id="dvSaferEscape_safety-info">
                 <p>
