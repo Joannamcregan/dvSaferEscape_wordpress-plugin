@@ -5,6 +5,8 @@ class SaferRedirect{
     constructor() {
         this.overlay = $('#dvSaferEscape_safety-overlay');
         this.overlayClose = $('#dvSaferEscape_safety-overlay-close');
+        this.redirectSettingsIcon = $('#dvSaferEscape_settings-icon');
+        this.escapeHatch = $('#dvSaferEscape_safety-exit');
         this.events();
         document.addEventListener("visibilitychange", ()=>{
             if (document.visibilityState !== "visible") {
@@ -23,6 +25,11 @@ class SaferRedirect{
 
     events(){
         this.overlayClose.on('click', this.closeSaferEscapeOverlay.bind(this));
+        this.redirectSettingsIcon.on('click', (e)=>{
+            e.stopPropagation();
+            this.openSaferEscapeOverlay();
+        });
+        this.escapeHatch.on('click', this.gtfo.bind(this));
     }
 
     gtfo(){
@@ -34,10 +41,12 @@ class SaferRedirect{
 
     closeSaferEscapeOverlay(){
         this.overlay.addClass('dvSaferEscape_hidden');
+        this.redirectSettingsIcon.removeClass('dvSaferEscape_hidden');
     }
 
     openSaferEscapeOverlay(){
         this.overlay.removeClass('dvSaferEscape_hidden');
+        this.redirectSettingsIcon.addClass('dvSaferEscape_hidden');
     }
 }
 

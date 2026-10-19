@@ -22,6 +22,8 @@ class SaferRedirect {
   constructor() {
     this.overlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-overlay');
     this.overlayClose = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-overlay-close');
+    this.redirectSettingsIcon = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_settings-icon');
+    this.escapeHatch = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-exit');
     this.events();
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState !== "visible") {
@@ -39,6 +41,11 @@ class SaferRedirect {
   }
   events() {
     this.overlayClose.on('click', this.closeSaferEscapeOverlay.bind(this));
+    this.redirectSettingsIcon.on('click', e => {
+      e.stopPropagation();
+      this.openSaferEscapeOverlay();
+    });
+    this.escapeHatch.on('click', this.gtfo.bind(this));
   }
   gtfo() {
     let searchDestination = localStorage.getItem('searchEngine') ? "https://" + localStorage.getItem('searchEngine') + ".com" : "https://google.com";
@@ -48,9 +55,11 @@ class SaferRedirect {
   }
   closeSaferEscapeOverlay() {
     this.overlay.addClass('dvSaferEscape_hidden');
+    this.redirectSettingsIcon.removeClass('dvSaferEscape_hidden');
   }
   openSaferEscapeOverlay() {
     this.overlay.removeClass('dvSaferEscape_hidden');
+    this.redirectSettingsIcon.addClass('dvSaferEscape_hidden');
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SaferRedirect);
