@@ -88,3 +88,26 @@ input#dvSaferSearch_search-input{
     text-decoration: underline;
     box-shadow: -5px 0px 10px #777;
 }
+#dvSaferEscape_safety-exit p{
+    margin: 20px;
+}
+#dvSaferEscape_settings-icon{
+    position: fixed;
+    bottom: 15px;
+    left: 20px;
+    border: none;
+    background: transparent;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 500ms ease-in, visibility 0ms ease-in 250ms;
+    transition-delay: 700ms;
+}
+#dvSaferEscape_settings-icon.dvSaferEscape_hidden{
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
+}
+#dvSaferEscape_bottom-spacer{
+    height: 50px;
+    border: solid red 2px;
+}

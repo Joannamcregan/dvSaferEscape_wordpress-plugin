@@ -24,20 +24,29 @@ class SaferRedirect {
     this.overlayClose = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-overlay-close');
     this.redirectSettingsIcon = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_settings-icon');
     this.escapeHatch = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-exit');
+    this.searchEngineOptions = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.dvSaferEscape_search-options');
+    this.saveSettingsButton = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_save-settings');
     this.events();
+    let idleTimer;
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState !== "visible") {
-        this.gtfo();
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => this.gtfo(), 10000);
       }
     });
     window.onload = () => {
-      console.log('load on');
+      clearTimeout(idleTimer);
       let searchTerm = localStorage.getItem('searchTerm');
-      console.log('search term is ' + searchTerm);
       if (searchTerm == "" || searchTerm == null) {
         this.openSaferEscapeOverlay();
       }
     };
+    window.onmousemove = () => clearTimeout(idleTimer);
+    window.onmousedown = () => clearTimeout(idleTimer);
+    window.ontouchstart = () => clearTimeout(idleTimer);
+    window.onkeydown = () => clearTimeout(idleTimer);
+    window.onclick = () => clearTimeout(idleTimer);
+    window.onscroll = () => clearTimeout(idleTimer);
   }
   events() {
     this.overlayClose.on('click', this.closeSaferEscapeOverlay.bind(this));
@@ -46,11 +55,14 @@ class SaferRedirect {
       this.openSaferEscapeOverlay();
     });
     this.escapeHatch.on('click', this.gtfo.bind(this));
+    this.searchEngineOptions.on('click', this.selectOption.bind(this));
+    this.saveSettingsButton.on('click', this.saveRedirectSettings.bind(this));
   }
   gtfo() {
     let searchDestination = localStorage.getItem('searchEngine') ? "https://" + localStorage.getItem('searchEngine') + ".com" : "https://google.com";
     searchDestination += '/search?q=';
-    searchDestination += localStorage.getItem('searchString') ? localStorage.getItem('searchString').replace(/ /g, '+') : "baby+sloths";
+    searchDestination += localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm').replace(/ /g, '+') : "baby+sloths";
+    localStorage.clear();
     console.log('gtfo and going to ' + searchDestination);
   }
   closeSaferEscapeOverlay() {
@@ -60,6 +72,17 @@ class SaferRedirect {
   openSaferEscapeOverlay() {
     this.overlay.removeClass('dvSaferEscape_hidden');
     this.redirectSettingsIcon.addClass('dvSaferEscape_hidden');
+  }
+  selectOption(e) {
+    this.searchEngineOptions.removeClass('dvSaferEscape_search-option-selected');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).addClass('dvSaferEscape_search-option-selected');
+  }
+  saveRedirectSettings() {
+    let searchEngine = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.dvSaferEscape_search-option-selected').data('name');
+    let searchTerm = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferSearch_search-input').val();
+    localStorage.setItem('searchEngine', searchEngine);
+    localStorage.setItem('searchTerm', searchTerm);
+    this.closeSaferEscapeOverlay();
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SaferRedirect);
