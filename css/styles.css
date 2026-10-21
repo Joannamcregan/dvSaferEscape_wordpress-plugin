@@ -1,5 +1,5 @@
 #dvSaferEscape_safety-overlay{
-    z-index: 9000;
+    z-index: 99999;
     position: fixed;
     overflow-y: scroll;
     top: 2px;
@@ -109,5 +109,4 @@ input#dvSaferSearch_search-input{
 }
 #dvSaferEscape_bottom-spacer{
     height: 50px;
-    border: solid red 2px;
 }

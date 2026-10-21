@@ -70,8 +70,17 @@ class SaferRedirect {
     this.redirectSettingsIcon.removeClass('dvSaferEscape_hidden');
   }
   openSaferEscapeOverlay() {
+    let searchEngine = localStorage.getItem('searchEngine');
+    let searchTerm = localStorage.getItem('searchTerm');
     this.overlay.removeClass('dvSaferEscape_hidden');
     this.redirectSettingsIcon.addClass('dvSaferEscape_hidden');
+    if (searchEngine !== '' && searchEngine !== null) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('.dvSaferEscape_search-options').removeClass('dvSaferEscape_search-option-selected');
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(`button[data-name="${searchEngine}"]`).addClass('dvSaferEscape_search-option-selected');
+    }
+    if (searchTerm !== '' && searchTerm !== null) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferSearch_search-input').val(searchTerm);
+    }
   }
   selectOption(e) {
     this.searchEngineOptions.removeClass('dvSaferEscape_search-option-selected');

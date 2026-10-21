@@ -57,8 +57,17 @@ class SaferRedirect{
     }
 
     openSaferEscapeOverlay(){
+        let searchEngine = localStorage.getItem('searchEngine');
+        let searchTerm = localStorage.getItem('searchTerm');
         this.overlay.removeClass('dvSaferEscape_hidden');
         this.redirectSettingsIcon.addClass('dvSaferEscape_hidden');
+        if (searchEngine !== '' && searchEngine !== null){
+            $('.dvSaferEscape_search-options').removeClass('dvSaferEscape_search-option-selected');
+            $(`button[data-name="${searchEngine}"]`).addClass('dvSaferEscape_search-option-selected');
+        }
+        if (searchTerm !== '' && searchTerm !== null){
+            $('#dvSaferSearch_search-input').val(searchTerm);
+        }
     }
 
     selectOption(e){
