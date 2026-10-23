@@ -31,7 +31,7 @@ class SaferRedirect {
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState !== "visible") {
         clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => this.gtfo(), 10000);
+        idleTimer = setTimeout(() => this.gtfo(), 20000);
       }
     });
     window.onload = () => {

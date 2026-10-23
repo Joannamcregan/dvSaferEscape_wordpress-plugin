@@ -108,5 +108,5 @@ input#dvSaferSearch_search-input{
     transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
 }
 #dvSaferEscape_bottom-spacer{
-    height: 50px;
+    height: 60px;
 }

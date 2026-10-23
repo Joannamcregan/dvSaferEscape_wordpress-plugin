@@ -13,6 +13,8 @@ class DVSaferEscapePlugin {
         add_action('wp_enqueue_scripts', array($this, 'pluginFiles'), 10, 0);
         add_action('wp_head', array($this, 'addSaferEscapeInstructionsOverlay'));
         add_action('wp_footer', array($this, 'addBottomPaddingForSaferEscape'));
+        add_action('admin_menu', array($this, 'dvSaferEscape_settingsMenu'));
+        add_action( 'admin_enqueue_scripts', array($this, 'dvSaferEscape_admin_color_picker_assets'));
     }
 
     function registerScripts(){
@@ -21,7 +23,8 @@ class DVSaferEscapePlugin {
 
     function pluginFiles(){
         wp_enqueue_style('dv-safer-escape-styles');
-        wp_enqueue_script('pwf-services-js', plugin_dir_url(__FILE__) . '/build/index.js', array('jquery'), '1.0', true);
+        wp_enqueue_style('wp-color-picker');
+        wp_enqueue_script('dv-safer-escape-js', plugin_dir_url(__FILE__) . '/build/index.js', array('jquery'), '1.0', true);
     }
 
     function addBottomPaddingForSaferEscape(){
@@ -50,10 +53,10 @@ class DVSaferEscapePlugin {
                     <input type="text" id="dvSaferSearch_search-input" placeholder="baby sloths">
                 </div>                
                 <p>
-                    We will redirect you to a search results page if we detect any sudden jerking motions from your mobile phone. If you are using an iPhone, please tap <span id="dvSaferEscape_iphone-prompt">here</span> so we can ask you for permission to access information about your device’s motion.
+                    We will redirect you to a search results page if we detect any sudden jerking motions from your mobile phone. If you are using an iPhone, please tap <span id="dvSaferEscape_iphone-prompt">here</span> so we can ask you for permission to access information about your device’s motion. (Note: the motion-based redirection has only been tested with Chrome, Edge, Safari, and Firefox browsers.)
                 </p>
                 <p>
-                    We will also redirect you if you hide or minimize this browser tab.
+                    We will also redirect you after twenty seconds if you hide or minimize this browser tab.
                 </p>
                 <button id="dvSaferEscape_save-settings">
                     save settings
@@ -67,5 +70,61 @@ class DVSaferEscapePlugin {
                 <button id="dvSaferEscape_settings-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"><title>settings</title><path fill="currentColor" d="m9.25 22l-.4-3.2q-.325-.125-.612-.3t-.563-.375L4.7 19.375l-2.75-4.75l2.575-1.95Q4.5 12.5 4.5 12.338v-.675q0-.163.025-.338L1.95 9.375l2.75-4.75l2.975 1.25q.275-.2.575-.375t.6-.3l.4-3.2h5.5l.4 3.2q.325.125.613.3t.562.375l2.975-1.25l2.75 4.75l-2.575 1.95q.025.175.025.338v.674q0 .163-.05.338l2.575 1.95l-2.75 4.75l-2.95-1.25q-.275.2-.575.375t-.6.3l-.4 3.2zm2.8-6.5q1.45 0 2.475-1.025T15.55 12t-1.025-2.475T12.05 8.5q-1.475 0-2.488 1.025T8.55 12t1.013 2.475T12.05 15.5"/></svg></button>
             </div>
     <?php }
+
+    function dvSaferEscape_settingsMenu() {
+        add_options_page(
+            'DV Safer Escape Settings',        // Page title
+            'DV Safer Escape',                 // Menu title
+            'manage_options',            // Capability
+            'dv-safer-escape-settings',        // Menu slug
+            array($this, 'dvSaferEscape_settingsPage')    // Callback function
+        );
+    }
+
+    function dvSaferEscape_settingsPage() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        ?>
+        <div>
+            <h1>DV Safer Settings</h1>
+            <form method="post" action="options.php">
+                <?php do_settings_sections( 'myoption-group' );
+                $backgroundColor = get_option('overlay_background_color', '#0073aa');
+                ?><table class="form-table">
+                    <tr>
+                        <th scope="row"><label for="overlay_background_color">Primary Color</label></th>
+                        <td>
+                            <input type="text" name="overlay_background_color" value="<?php echo esc_attr($backgroundColor); ?>" class="dvSaferEscape_color-field" />
+                        </td>
+                    </tr>
+                </table>
+            <?php submit_button(); ?>
+            </form>
+        </div>
+    <?php }
+
+    function dvSaferEscape_admin_color_picker_assets( $hook_suffix ) {
+        // Optional: Only load on your specific plugin/setting page
+        // if ( 'settings_page_my-plugin' !== $hook_suffix ) { return; }
+        wp_enqueue_style( 'wp-color-picker' );
+        wp_enqueue_script(
+            'my-admin-picker-js',
+            plugins_url( 'admin-js/admin-picker.js', __FILE__ ), // Adjust path to your JS file
+            array( 'jquery', 'wp-color-picker' ),          // Set dependencies
+            '1.0.0',
+            true                                           // Load in footer
+        );
+    }
+
+    function register_dvSaferEscape_plugin_settings() {
+        register_setting( 'dvSaferEscape-settings-group', 'overlay_background_color' );
+        register_setting( 'dvSaferEscape-settings-group', 'overlay_text_color' );
+        register_setting( 'dvSaferEscape-settings-group', 'overlay_button_fill_color' );
+        register_setting( 'dvSaferEscape-settings-group', 'overlay_button_outline_color' );
+        register_setting( 'dvSaferEscape-settings-group', 'overlay_button_text_color' );
+        register_setting( 'dvSaferEscape-settings-group', 'escape_button_background_color' );        
+        register_setting( 'dvSaferEscape-settings-group', 'escape_button_text_color' );
+    }
 }
 $dvSaferEscapePlugin = new DVSaferEscapePlugin();
