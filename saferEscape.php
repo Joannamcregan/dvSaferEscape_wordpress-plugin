@@ -14,6 +14,7 @@ class DVSaferEscapePlugin {
         add_action('wp_head', array($this, 'addSaferEscapeInstructionsOverlay'));
         add_action('wp_footer', array($this, 'addBottomPaddingForSaferEscape'));
         add_action('admin_menu', array($this, 'dvSaferEscape_settingsMenu'));
+        add_action('admin_init', array($this, 'register_dvSaferEscape_plugin_settings'));
         add_action( 'admin_enqueue_scripts', array($this, 'dvSaferEscape_admin_color_picker_assets'));
     }
 
@@ -87,14 +88,17 @@ class DVSaferEscapePlugin {
         }
         ?>
         <div>
-            <h1>DV Safer Settings</h1>
+            <h1>DV Safer Escape Settings</h1>
+            <h2>Instructions Overlay Styling</h2>
             <form method="post" action="options.php">
-                <?php do_settings_sections( 'myoption-group' );
+                <?php 
+                settings_fields( 'dvSaferEscape-settings-group' );
+                do_settings_sections( 'dvSaferEscape-settings-group' );
                 $backgroundColor = get_option('overlay_background_color', '#0073aa');
                 ?><table class="form-table">
                     <tr>
-                        <th scope="row"><label for="overlay_background_color">Primary Color</label></th>
-                        <td>
+                        <th scope="row"><label for="overlay_background_color">Background Color</label></th>
+                        <td data-default="#9e6b6b">
                             <input type="text" name="overlay_background_color" value="<?php echo esc_attr($backgroundColor); ?>" class="dvSaferEscape_color-field" />
                         </td>
                     </tr>
@@ -119,12 +123,12 @@ class DVSaferEscapePlugin {
 
     function register_dvSaferEscape_plugin_settings() {
         register_setting( 'dvSaferEscape-settings-group', 'overlay_background_color' );
-        register_setting( 'dvSaferEscape-settings-group', 'overlay_text_color' );
-        register_setting( 'dvSaferEscape-settings-group', 'overlay_button_fill_color' );
-        register_setting( 'dvSaferEscape-settings-group', 'overlay_button_outline_color' );
-        register_setting( 'dvSaferEscape-settings-group', 'overlay_button_text_color' );
-        register_setting( 'dvSaferEscape-settings-group', 'escape_button_background_color' );        
-        register_setting( 'dvSaferEscape-settings-group', 'escape_button_text_color' );
+        // register_setting( 'dvSaferEscape-settings-group', 'overlay_text_color' );
+        // register_setting( 'dvSaferEscape-settings-group', 'overlay_button_fill_color' );
+        // register_setting( 'dvSaferEscape-settings-group', 'overlay_button_outline_color' );
+        // register_setting( 'dvSaferEscape-settings-group', 'overlay_button_text_color' );
+        // register_setting( 'dvSaferEscape-settings-group', 'escape_button_background_color' );        
+        // register_setting( 'dvSaferEscape-settings-group', 'escape_button_text_color' );
     }
 }
 $dvSaferEscapePlugin = new DVSaferEscapePlugin();
