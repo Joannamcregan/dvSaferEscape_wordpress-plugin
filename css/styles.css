@@ -45,16 +45,18 @@ div#dvSaferEscape_search-options-section{
 button.dvSaferEscape_search-options{
     padding: 5px;
     text-align: center;
-    border: solid #DCC9C7 1px;
-    background: #F6F2EF;
-    margin: 0px;
+    background: #f7f7f7;
+    margin: -2px;
+    cursor: pointer;
 }
 button.dvSaferEscape_search-option-selected{
-    background: #ffffff !important;
-    border-top: solid #DCC9C7 3px;
-    border-right: solid #DCC9C7 3px;
-    border-left: solid #DCC9C7 3px;
+    background: #ffffff;
+    margin: -2px;
     border-bottom: none;
+    cursor: pointer;
+}
+button.dvSaferEscape_search-options:focus:not(:focus-visible){
+    border: transparent;
 }
 input#dvSaferSearch_search-input{
     display: block;
@@ -66,7 +68,7 @@ input#dvSaferSearch_search-input{
     margin-bottom: 50px;
 }
 #dvSaferEscape_save-settings{
-    background: #F6F2EF;
+    background: #F7f7f7;
     border: solid #DCC9C7 3px;
     padding: 10px 20px;
     display: block;
@@ -80,13 +82,11 @@ input#dvSaferSearch_search-input{
     position: fixed;
     z-index: 9999;
     cursor: pointer;
-    background: #ffdec2;
     bottom: 0;
     right: 0;
     left: 0;
     text-align: center;
     text-decoration: underline;
-    box-shadow: -5px 0px 10px #777;
 }
 #dvSaferEscape_safety-exit p{
     margin: 20px;
@@ -97,6 +97,7 @@ input#dvSaferSearch_search-input{
     left: 20px;
     border: none;
     background: transparent;
+    cursor: pointer;
     visibility: visible;
     opacity: 1;
     transition: opacity 500ms ease-in, visibility 0ms ease-in 250ms;
