@@ -96,10 +96,11 @@ class DVSaferEscapePlugin {
                 do_settings_sections( 'dvSaferEscape-settings-group' );
                 $backgroundColor = get_option('escape_button_background_color', '#32153f');
                 $textColor = get_option('escape_button_text_color', '#faf6ea');
+                $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
                 $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
                 ?><table class="form-table">
                     <br>
-                    <th scope="row"><h2>Escape Button Styling</h2></th>
+                    <th scope="row"><h2>Escape Button</h2></th>
                     <tr>
                         <th scope="row"><label for="escape_button_background_color">Background Color</label></th>
                         <td data-default="#32153f">
@@ -112,7 +113,20 @@ class DVSaferEscapePlugin {
                             <input type="text" name="escape_button_text_color" value="<?php echo esc_attr($textColor); ?>" class="dvSaferEscape_color-field" />
                         </td>
                     </tr>
-                    <th scope="row"><h2>Instructions Styling</h2></th>
+                    <tr>
+                        <th scope="row"><p>Button Placement</label></p>
+                        <td data-default="#faf6ea">
+                            <input type="radio" id="dvSaferEscape_button-placement_bottom-full" name="dvSaferEscape_button-placement" value="bottom-full" <?php echo esc_attr($buttonPlacement) == 'bottom-full' ? 'checked' : ''; ?>>
+                            <label for="dvSaferEscape_button-placement_bottom-full">bottom full screen</label>
+                            <br>
+                            <input type="radio" id="dvSaferEscape_button-placement_bottom-left" name="dvSaferEscape_button-placement" value="bottom-left"  <?php echo esc_attr($buttonPlacement) == 'bottom-left' ? 'checked' : ''; ?>>
+                            <label for="dvSaferEscape_button-placement_bottom-left">bottom left</label>
+                            <br>
+                            <input type="radio" id="dvSaferEscape_button-placement_bottom-right" name="dvSaferEscape_button-placement" value="bottom-right"  <?php echo esc_attr($buttonPlacement) == 'bottom-right' ? 'checked' : ''; ?>>
+                            <label for="dvSaferEscape_button-placement_bottom-right">bottom right</label>
+                        </td>
+                    </tr>
+                    <th scope="row"><h2>Instructions Overlay</h2></th>
                     <tr>
                         <th scope="row"><label for="instruction_overlay_button_outline_color">Button Outline</label></th>
                         <td data-default="#32153f">
@@ -131,22 +145,28 @@ class DVSaferEscapePlugin {
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_script(
             'my-admin-picker-js',
-            plugins_url( 'admin-js/admin-picker.js', __FILE__ ), // Adjust path to your JS file
-            array( 'jquery', 'wp-color-picker' ),          // Set dependencies
+            plugins_url( 'admin-js/admin-picker.js', __FILE__ ), 
+            array( 'jquery', 'wp-color-picker' ), 
             '1.0.0',
-            true                                           // Load in footer
+            true  
         );
     }
 
     function register_dvSaferEscape_plugin_settings() {
         register_setting('dvSaferEscape-settings-group', 'escape_button_background_color');
         register_setting('dvSaferEscape-settings-group', 'escape_button_text_color');
+        register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_button-placement', array(
+            'type'              => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default'           => 'bottom-full',
+        ));
         register_setting('dvSaferEscape-settings-group', 'instruction_overlay_button_outline_color');
     }
 
     function dvSaferEscape_custom_styles() {
         $backgroundColor   = get_option('escape_button_background_color', '#32153f');
         $textColor = get_option('escape_button_text_color', '#faf6ea');
+        $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
         $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
         $custom_css = "
             #dvSaferEscape_safety-exit{
@@ -169,6 +189,19 @@ class DVSaferEscapePlugin {
                 border: solid" . esc_attr($buttonOutlineColor) . " 3px;
             }
         ";
+        if ($buttonPlacement == 'bottom-left'){
+            $custom_css .= "#dvSaferEscape_safety-exit{
+                bottom: 0px; left: 20px; min-width: 180px;   
+            }";
+        } else if ($buttonPlacement == 'bottom-right'){
+            $custom_css .= "#dvSaferEscape_safety-exit{
+                bottom: 0px; right: 20px; min-width: 180px;
+            }";
+        } else {
+            $custom_css .= "#dvSaferEscape_safety-exit{
+                bottom: 0px; left: 0px; right: 0px;
+            }";
+        }
         wp_add_inline_style('dv-safer-escape-styles', $custom_css);
     }
 }
