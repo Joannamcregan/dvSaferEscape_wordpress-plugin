@@ -1,11 +1,14 @@
+.dvSaferEscape_no-scroll{
+    overflow: hidden;
+}
 #dvSaferEscape_safety-overlay{
     z-index: 99999;
     position: fixed;
     overflow-y: scroll;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
     background: rgba(250, 250, 250, 0.98);
     padding-bottom: 60px;
     visibility: visible;
@@ -86,7 +89,8 @@ input#dvSaferSearch_search-input{
     right: 0;
     left: 0;
     text-align: center;
-    text-decoration: underline;
+    text-decoration: underline;            
+    box-shadow: 0px 0px 10px black ;
 }
 #dvSaferEscape_safety-exit p{
     margin: 20px;

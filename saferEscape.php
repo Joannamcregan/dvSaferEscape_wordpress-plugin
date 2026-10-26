@@ -151,8 +151,7 @@ class DVSaferEscapePlugin {
         $custom_css = "
             #dvSaferEscape_safety-exit{
                 background-color: " . esc_attr($backgroundColor) . ";
-                color: " . esc_attr($textColor) . ";                
-                box-shadow: -5px 0px 10px" . esc_attr($backgroundColor) . ";
+                color: " . esc_attr($textColor) . ";    
             }
             #dvSaferEscape_settings-icon{
                 color: " . esc_attr($textColor) . ";

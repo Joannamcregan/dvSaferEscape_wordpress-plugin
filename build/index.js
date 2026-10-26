@@ -68,6 +68,7 @@ class SaferRedirect {
   closeSaferEscapeOverlay() {
     this.overlay.addClass('dvSaferEscape_hidden');
     this.redirectSettingsIcon.removeClass('dvSaferEscape_hidden');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').removeClass('dvSaferEscape_no-scroll');
   }
   openSaferEscapeOverlay() {
     let searchEngine = localStorage.getItem('searchEngine');
@@ -81,6 +82,7 @@ class SaferRedirect {
     if (searchTerm !== '' && searchTerm !== null) {
       jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferSearch_search-input').val(searchTerm);
     }
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').addClass('dvSaferEscape_no-scroll');
   }
   selectOption(e) {
     this.searchEngineOptions.removeClass('dvSaferEscape_search-option-selected');

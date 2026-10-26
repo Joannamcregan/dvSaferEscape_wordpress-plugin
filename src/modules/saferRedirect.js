@@ -54,6 +54,7 @@ class SaferRedirect{
     closeSaferEscapeOverlay(){
         this.overlay.addClass('dvSaferEscape_hidden');
         this.redirectSettingsIcon.removeClass('dvSaferEscape_hidden');
+        $('body').removeClass('dvSaferEscape_no-scroll');
     }
 
     openSaferEscapeOverlay(){
@@ -68,6 +69,7 @@ class SaferRedirect{
         if (searchTerm !== '' && searchTerm !== null){
             $('#dvSaferSearch_search-input').val(searchTerm);
         }
+        $('body').addClass('dvSaferEscape_no-scroll');
     }
 
     selectOption(e){
