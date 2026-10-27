@@ -9,6 +9,7 @@ if( ! defined('ABSPATH') ) exit;
 
 class DVSaferEscapePlugin {
     function __construct() {
+        $plugin = plugin_basename(__FILE__);
         add_action('init', array($this, 'registerScripts'));
         add_action('wp_enqueue_scripts', array($this, 'pluginFiles'), 10, 0);
         add_action('wp_head', array($this, 'addSaferEscapeInstructionsOverlay'));
@@ -17,6 +18,8 @@ class DVSaferEscapePlugin {
         add_action('admin_init', array($this, 'register_dvSaferEscape_plugin_settings'));
         add_action( 'admin_enqueue_scripts', array($this, 'dvSaferEscape_admin_color_picker_assets'));
         add_action( 'wp_enqueue_scripts', array($this, 'dvSaferEscape_custom_styles'), 20 );
+        add_filter("plugin_action_links_$plugin", array($this, 'dvSaferEscape_settings_link'));
+        //dvSaferEscape_settings_link
     }
 
     function registerScripts(){
@@ -203,6 +206,12 @@ class DVSaferEscapePlugin {
             }";
         }
         wp_add_inline_style('dv-safer-escape-styles', $custom_css);
+    }
+
+    function dvSaferEscape_settings_link($links) {
+        $settings_link = '<a href="options-general.php?page=dv-safer-escape-settings">Settings</a>';
+        array_unshift($links, $settings_link);
+        return $links;
     }
 }
 $dvSaferEscapePlugin = new DVSaferEscapePlugin();
