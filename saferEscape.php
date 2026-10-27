@@ -37,9 +37,11 @@ class DVSaferEscapePlugin {
     <?php }
 
     function addSaferEscapeInstructionsOverlay(){
+        $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
         ?><div id="dvSaferEscape_safety-overlay" class="dvSaferEscape_hidden">
             <span id="dvSaferEscape_safety-overlay-close">close</span>
             <div id="dvSaferEscape_safety-info">
+                <h1><?php echo esc_html($headingText); ?></h1>
                 <p>
                     Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. <em>This is true even if the abuser has never been physically violent before.</em>
                 </p>
@@ -100,6 +102,7 @@ class DVSaferEscapePlugin {
                 $backgroundColor = get_option('escape_button_background_color', '#32153f');
                 $textColor = get_option('escape_button_text_color', '#faf6ea');
                 $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
+                $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
                 $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
                 ?><table class="form-table">
                     <br>
@@ -117,7 +120,7 @@ class DVSaferEscapePlugin {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><p>Button Placement</label></p>
+                        <th scope="row"><p>Button Placement</p>
                         <td data-default="#faf6ea">
                             <input type="radio" id="dvSaferEscape_button-placement_bottom-full" name="dvSaferEscape_button-placement" value="bottom-full" <?php echo esc_attr($buttonPlacement) == 'bottom-full' ? 'checked' : ''; ?>>
                             <label for="dvSaferEscape_button-placement_bottom-full">bottom full screen</label>
@@ -130,6 +133,12 @@ class DVSaferEscapePlugin {
                         </td>
                     </tr>
                     <th scope="row"><h2>Instructions Overlay</h2></th>
+                    <tr>
+                        <th scope="row"><label for="dvSaferEscape_overlay_heading">Heading Text</label></th>
+                        <td>
+                            <textarea name="dvSaferEscape_overlay_heading"><?php echo esc_attr($headingText); ?></textarea>
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row"><label for="instruction_overlay_button_outline_color">Button Outline</label></th>
                         <td data-default="#32153f">
@@ -163,6 +172,7 @@ class DVSaferEscapePlugin {
             'sanitize_callback' => 'sanitize_text_field',
             'default'           => 'bottom-full',
         ));
+        register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_overlay_heading');
         register_setting('dvSaferEscape-settings-group', 'instruction_overlay_button_outline_color');
     }
 
@@ -170,6 +180,7 @@ class DVSaferEscapePlugin {
         $backgroundColor   = get_option('escape_button_background_color', '#32153f');
         $textColor = get_option('escape_button_text_color', '#faf6ea');
         $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
+        $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
         $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
         $custom_css = "
             #dvSaferEscape_safety-exit{
