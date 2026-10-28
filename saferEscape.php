@@ -136,7 +136,7 @@ class DVSaferEscapePlugin {
                     <tr>
                         <th scope="row"><label for="dvSaferEscape_overlay_heading">Heading Text</label></th>
                         <td>
-                            <textarea name="dvSaferEscape_overlay_heading"><?php echo esc_attr($headingText); ?></textarea>
+                            <textarea name="dvSaferEscape_overlay_heading" maxlength="100" ><?php echo esc_attr($headingText); ?></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -165,15 +165,31 @@ class DVSaferEscapePlugin {
     }
 
     function register_dvSaferEscape_plugin_settings() {
-        register_setting('dvSaferEscape-settings-group', 'escape_button_background_color');
-        register_setting('dvSaferEscape-settings-group', 'escape_button_text_color');
-        register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_button-placement', array(
-            'type'              => 'string',
+        register_setting('dvSaferEscape-settings-group', 'escape_button_background_color', array(
+            'type' => 'string',
             'sanitize_callback' => 'sanitize_text_field',
-            'default'           => 'bottom-full',
+            'default' => '#32153f',
         ));
-        register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_overlay_heading');
-        register_setting('dvSaferEscape-settings-group', 'instruction_overlay_button_outline_color');
+        register_setting('dvSaferEscape-settings-group', 'escape_button_text_color', array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default' => '#faf6ea',
+        ));
+        register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_button-placement', array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default' => 'bottom-full',
+        ));
+        register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_overlay_heading', array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_dvSaferEscape_options',
+            'default' => 'An Important Safety Message',
+        ));
+        register_setting('dvSaferEscape-settings-group', 'instruction_overlay_button_outline_color', array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default' => '#32153f',
+        ));
     }
 
     function dvSaferEscape_custom_styles() {
@@ -224,5 +240,13 @@ class DVSaferEscapePlugin {
         array_unshift($links, $settings_link);
         return $links;
     }
+
+    function sanitize_dvSaferEscape_options( $input ) {
+    if ( isset( $input['my_option_name'] ) ) {
+        // Enforce a strict 50-character limit on the server side
+        $input['dvSaferEscape_overlay_heading'] = mb_substr( sanitize_text_field( $input['dvSaferEscape_overlay_heading'] ), 0, 100 );
+    }
+    return $input;
+}
 }
 $dvSaferEscapePlugin = new DVSaferEscapePlugin();
