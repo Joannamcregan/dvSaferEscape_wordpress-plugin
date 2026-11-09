@@ -2,7 +2,7 @@
     overflow: hidden;
 }
 #dvSaferEscape_safety-overlay{
-    z-index: 99999;
+    z-index: 999999;
     position: fixed;
     overflow-y: scroll;
     top: 0px;
@@ -16,10 +16,22 @@
     transition: opacity 500ms ease-in, visibility 0ms ease-in 250ms;
     transition-delay: 700ms;
 }
-#dvSaferEscape_safety-overlay.dvSaferEscape_hidden{
+#dvSaferEscape_safety-overlay.dvSaferEscape_invisible{
     visibility: hidden;
     opacity: 0;
     transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;
+}
+#dvSaferEscape_preredirectBlankScreen{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: #000000;
+    z-index: 9999999999;
+}
+#dvSaferEscape_preredirectBlankScreen.dvSaferEscape_hidden{
+    display: none !important;
 }
 #dvSaferEscape_safety-info{
     background: white;
@@ -51,6 +63,7 @@ button.dvSaferEscape_search-options{
     background: #f7f7f7;
     margin: -2px;
     cursor: pointer;
+    color: black;
 }
 button.dvSaferEscape_search-option-selected{
     background: #ffffff;
@@ -76,6 +89,7 @@ input#dvSaferSearch_search-input{
     padding: 10px 20px;
     display: block;
     margin: auto;
+    color: black;
 }
 #dvSaferEscape_iphone-prompt{
     text-decoration: underline;
@@ -84,7 +98,7 @@ input#dvSaferSearch_search-input{
 #dvSaferEscape_safety-exit{
     position: fixed;
     display: relative;
-    z-index: 9999;
+    z-index: 9999999;
     cursor: pointer;
     text-align: center;
     text-decoration: underline;            
@@ -105,7 +119,7 @@ input#dvSaferSearch_search-input{
     transition: opacity 500ms ease-in, visibility 0ms ease-in 250ms;
     transition-delay: 700ms;
 }
-#dvSaferEscape_settings-icon.dvSaferEscape_hidden{
+#dvSaferEscape_settings-icon.dvSaferEscape_invisible{
     visibility: hidden;
     opacity: 0;
     transition: opacity 250ms ease-in, visibility 0ms ease-in 250ms;

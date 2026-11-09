@@ -34,6 +34,11 @@ class SaferRedirect {
         idleTimer = setTimeout(() => this.gtfo(), 20000);
       }
     });
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('keydown', function (event) {
+      if (event.key === "Escape") {
+        this.gtfo();
+      }
+    });
     window.onload = () => {
       clearTimeout(idleTimer);
       let searchTerm = localStorage.getItem('searchTerm');
@@ -63,18 +68,23 @@ class SaferRedirect {
     searchDestination += '/search?q=';
     searchDestination += localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm').replace(/ /g, '+') : "baby+sloths";
     localStorage.clear();
-    console.log('gtfo and going to ' + searchDestination);
+    // console.log('gtfo and going to ' + searchDestination);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_preredirectBlankScreen').removeClass('dvSaferEscape-hidden');
+    setTimeout(() => {
+      window.open(searchDestination, '_blank');
+      window.location.replace(searchDestination);
+    }, 10);
   }
   closeSaferEscapeOverlay() {
-    this.overlay.addClass('dvSaferEscape_hidden');
-    this.redirectSettingsIcon.removeClass('dvSaferEscape_hidden');
+    this.overlay.addClass('dvSaferEscape_invisible');
+    this.redirectSettingsIcon.removeClass('dvSaferEscape_invisible');
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').removeClass('dvSaferEscape_no-scroll');
   }
   openSaferEscapeOverlay() {
     let searchEngine = localStorage.getItem('searchEngine');
     let searchTerm = localStorage.getItem('searchTerm');
-    this.overlay.removeClass('dvSaferEscape_hidden');
-    this.redirectSettingsIcon.addClass('dvSaferEscape_hidden');
+    this.overlay.removeClass('dvSaferEscape_invisible');
+    this.redirectSettingsIcon.addClass('dvSaferEscape_invisible');
     if (searchEngine !== '' && searchEngine !== null) {
       jquery__WEBPACK_IMPORTED_MODULE_0___default()('.dvSaferEscape_search-options').removeClass('dvSaferEscape_search-option-selected');
       jquery__WEBPACK_IMPORTED_MODULE_0___default()(`button[data-name="${searchEngine}"]`).addClass('dvSaferEscape_search-option-selected');

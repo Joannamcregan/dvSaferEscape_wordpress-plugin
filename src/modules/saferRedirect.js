@@ -17,13 +17,18 @@ class SaferRedirect{
                 idleTimer = setTimeout(()=>this.gtfo(), 20000);
             }
         });
+        $(document).on('keydown', function(event) {
+            if (event.key === "Escape") {
+                this.gtfo()
+            }
+        });
         window.onload = ()=>{
             clearTimeout(idleTimer);
             let searchTerm = localStorage.getItem('searchTerm');
             if (searchTerm == "" || searchTerm == null){
                 this.openSaferEscapeOverlay();
             }
-        }
+        };
         window.onmousemove = ()=>clearTimeout(idleTimer);
         window.onmousedown = ()=>clearTimeout(idleTimer);
         window.ontouchstart = ()=>clearTimeout(idleTimer);
@@ -48,20 +53,25 @@ class SaferRedirect{
         searchDestination += '/search?q=';
         searchDestination += localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm').replace(/ /g, '+') : "baby+sloths";
         localStorage.clear();
-        console.log('gtfo and going to ' + searchDestination);
+        // console.log('gtfo and going to ' + searchDestination);
+        $('#dvSaferEscape_preredirectBlankScreen').removeClass('dvSaferEscape-hidden');
+        setTimeout(()=>{
+            window.open(searchDestination, '_blank');
+            window.location.replace(searchDestination);
+        }, 10);
     }
 
     closeSaferEscapeOverlay(){
-        this.overlay.addClass('dvSaferEscape_hidden');
-        this.redirectSettingsIcon.removeClass('dvSaferEscape_hidden');
+        this.overlay.addClass('dvSaferEscape_invisible');
+        this.redirectSettingsIcon.removeClass('dvSaferEscape_invisible');
         $('body').removeClass('dvSaferEscape_no-scroll');
     }
 
     openSaferEscapeOverlay(){
         let searchEngine = localStorage.getItem('searchEngine');
         let searchTerm = localStorage.getItem('searchTerm');
-        this.overlay.removeClass('dvSaferEscape_hidden');
-        this.redirectSettingsIcon.addClass('dvSaferEscape_hidden');
+        this.overlay.removeClass('dvSaferEscape_invisible');
+        this.redirectSettingsIcon.addClass('dvSaferEscape_invisible');
         if (searchEngine !== '' && searchEngine !== null){
             $('.dvSaferEscape_search-options').removeClass('dvSaferEscape_search-option-selected');
             $(`button[data-name="${searchEngine}"]`).addClass('dvSaferEscape_search-option-selected');
