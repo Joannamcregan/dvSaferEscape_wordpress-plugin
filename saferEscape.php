@@ -13,10 +13,11 @@ class DVSaferEscapePlugin {
         add_action('init', array($this, 'registerScripts'));
         add_action('wp_enqueue_scripts', array($this, 'pluginFiles'), 10, 0);
         add_action('wp_head', array($this, 'addSaferEscapeInstructionsOverlay'));
+        add_action('wp_head', array($this, 'addPreRedirectBlankScreen'));
         add_action('wp_footer', array($this, 'addBottomPaddingForSaferEscape'));
         add_action('admin_menu', array($this, 'dvSaferEscape_settingsMenu'));
         add_action('admin_init', array($this, 'register_dvSaferEscape_plugin_settings'));
-        add_action( 'admin_enqueue_scripts', array($this, 'dvSaferEscape_admin_color_picker_assets'));
+        add_action( 'admin_enqueue_scripts', array($this, 'dvSaferEscape_admin_color_picker_assets'), 10);
         add_action( 'wp_enqueue_scripts', array($this, 'dvSaferEscape_custom_styles'), 20 );
         add_filter("plugin_action_links_$plugin", array($this, 'dvSaferEscape_settings_link'));
         //dvSaferEscape_settings_link
@@ -36,14 +37,19 @@ class DVSaferEscapePlugin {
         ?><div id="dvSaferEscape_bottom-spacer"></div>
     <?php }
 
+    function addPreRedirectBlankScreen(){
+        ?><div id="dvSaferEscape_preredirectBlankScreen"  class="dvSaferEscape_hidden"></div>
+    <?php }
+
     function addSaferEscapeInstructionsOverlay(){
         $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
-        ?><div id="dvSaferEscape_safety-overlay" class="dvSaferEscape_hidden">
-            <span id="dvSaferEscape_safety-overlay-close">close</span>
+        $paragraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.');
+        ?><div id="dvSaferEscape_safety-overlay" class="dvSaferEscape_invisible">
+            <button id="dvSaferEscape_safety-overlay-close">close</button>
             <div id="dvSaferEscape_safety-info">
                 <h1><?php echo esc_html($headingText); ?></h1>
                 <p>
-                    Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. <em>This is true even if the abuser has never been physically violent before.</em>
+                    Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.
                 </p>
                 <p>
                     This site was built with safety precautions to keep visitors safe. Pressing the “EXIT” button on the bottom of the screen will redirect you to a search results page.
@@ -70,7 +76,7 @@ class DVSaferEscapePlugin {
                 </button>
             </div>
             </div>
-            <div id="dvSaferEscape_safety-exit">
+            <div id="dvSaferEscape_safety-exit" tabindex="0">
                 <p>
                     <strong>EXIT</strong>
                 </p>
@@ -103,6 +109,7 @@ class DVSaferEscapePlugin {
                 $textColor = get_option('escape_button_text_color', '#faf6ea');
                 $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
                 $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
+                $paragraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.');
                 $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
                 ?><table class="form-table">
                     <br>
@@ -140,6 +147,12 @@ class DVSaferEscapePlugin {
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row"><label for="dvSaferEscape_overlay_intro_paragraph" style="min-height: 100px">Opening Text</label></th>
+                        <td>
+                            <textarea name="dvSaferEscape_overlay_intro_paragraph" maxlength="1000" style="min-height: 260px"><?php echo esc_attr($paragraphText); ?></textarea>
+                        </td>
+                    </tr>
+                    <tr>
                         <th scope="row"><label for="instruction_overlay_button_outline_color">Button Outline</label></th>
                         <td data-default="#32153f">
                             <input type="text" name="instruction_overlay_button_outline_color" value="<?php echo esc_attr($buttonOutlineColor); ?>" class="dvSaferEscape_color-field" />
@@ -152,8 +165,7 @@ class DVSaferEscapePlugin {
     <?php }
 
     function dvSaferEscape_admin_color_picker_assets( $hook_suffix ) {
-        // Optional: Only load on your specific plugin/setting page
-        // if ( 'settings_page_my-plugin' !== $hook_suffix ) { return; }
+        // if ( 'settings_page_dv-safer-escape' !== $hook_suffix ) { return; }
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_script(
             'my-admin-picker-js',
@@ -182,8 +194,13 @@ class DVSaferEscapePlugin {
         ));
         register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_overlay_heading', array(
             'type' => 'string',
-            'sanitize_callback' => 'sanitize_dvSaferEscape_options',
+            'sanitize_callback' => array($this, 'sanitize_dvSaferEscape_options'),
             'default' => 'An Important Safety Message',
+        ));
+        register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_overlay_intro_paragraph', array(
+            'type' => 'string',
+            'sanitize_callback' => array($this, 'sanitize_dvSaferEscape_options'),
+            'default' => 'Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.',
         ));
         register_setting('dvSaferEscape-settings-group', 'instruction_overlay_button_outline_color', array(
             'type' => 'string',
@@ -196,7 +213,8 @@ class DVSaferEscapePlugin {
         $backgroundColor   = get_option('escape_button_background_color', '#32153f');
         $textColor = get_option('escape_button_text_color', '#faf6ea');
         $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
-        $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
+        // $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
+        // $introParagraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.');
         $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
         $custom_css = "
             #dvSaferEscape_safety-exit{
@@ -242,11 +260,13 @@ class DVSaferEscapePlugin {
     }
 
     function sanitize_dvSaferEscape_options( $input ) {
-    if ( isset( $input['my_option_name'] ) ) {
-        // Enforce a strict 50-character limit on the server side
-        $input['dvSaferEscape_overlay_heading'] = mb_substr( sanitize_text_field( $input['dvSaferEscape_overlay_heading'] ), 0, 100 );
+        if ( isset( $input['dvSaferEscape_overlay_heading'] ) ) {
+            // $input['dvSaferEscape_overlay_heading'] = mb_substr( sanitize_text_field( $input['dvSaferEscape_overlay_heading'] ), 0, 100 );
+        }
+        // if ( isset( $input['dvSaferEscape_overlay_intro_paragraph'] ) ) {
+        //     $input['dvSaferEscape_overlay_intro_paragraph'] = mb_substr( sanitize_text_field( $input['dvSaferEscape_overlay_intro_paragraph'] ), 0, 1000 );
+        // }
+        return $input;
     }
-    return $input;
-}
 }
 $dvSaferEscapePlugin = new DVSaferEscapePlugin();
