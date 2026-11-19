@@ -48,40 +48,15 @@
     position: absolute;
     top: 40px;
     right: 20px;
+    background: transparent;
 }
-div#dvSaferEscape_search-section{
-    width: 640px;
-    max-width: 90%;
+#dvSaferEscape_redirect-selection-options{
+    padding: 0px 20px 20px 20px;
     margin: auto;
+    width: fit-content;
 }
-div#dvSaferEscape_search-options-section{
-    margin-bottom: 20px;
-}
-button.dvSaferEscape_search-options{
-    padding: 5px;
-    text-align: center;
-    background: #f7f7f7;
-    margin: -2px;
-    cursor: pointer;
-    color: black;
-}
-button.dvSaferEscape_search-option-selected{
-    background: #ffffff;
-    margin: -2px;
-    border-bottom: none;
-    cursor: pointer;
-}
-button.dvSaferEscape_search-options:focus:not(:focus-visible){
-    border: transparent;
-}
-input#dvSaferSearch_search-input{
-    display: block;
-    margin: auto;
-    padding: 5px 10px;
-    border-radius: 20px;
-    width: 580px;
-    max-width: 90%;
-    margin-bottom: 50px;
+input[name="dvSaferEscape_redirect-selection"][value="cnn"]{
+    border: solid blue 2px;
 }
 #dvSaferEscape_save-settings{
     background: #F7f7f7;
@@ -106,6 +81,9 @@ input#dvSaferSearch_search-input{
 }
 #dvSaferEscape_safety-exit p{
     margin: 20px;
+}
+#dvSaferEscape_safety-exit:focus{
+  transform: scale(1.4);
 }
 #dvSaferEscape_settings-icon{
     position: absolute;

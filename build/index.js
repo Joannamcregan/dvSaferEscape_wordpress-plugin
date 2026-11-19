@@ -24,8 +24,8 @@ class SaferRedirect {
     this.overlayClose = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-overlay-close');
     this.redirectSettingsIcon = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_settings-icon');
     this.escapeHatch = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_safety-exit');
-    this.searchEngineOptions = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.dvSaferEscape_search-options');
     this.saveSettingsButton = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_save-settings');
+    this.iphonePermission = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_iphone-prompt');
     this.events();
     let idleTimer;
     document.addEventListener("visibilitychange", () => {
@@ -41,8 +41,8 @@ class SaferRedirect {
     });
     window.onload = () => {
       clearTimeout(idleTimer);
-      let searchTerm = localStorage.getItem('searchTerm');
-      if (searchTerm == "" || searchTerm == null) {
+      let newsPreference = localStorage.getItem('newsPreference');
+      if (newsPreference == "" || newsPreference == null) {
         this.openSaferEscapeOverlay();
       }
     };
@@ -60,16 +60,18 @@ class SaferRedirect {
       this.openSaferEscapeOverlay();
     });
     this.escapeHatch.on('click', this.gtfo.bind(this));
-    this.searchEngineOptions.on('click', this.selectOption.bind(this));
     this.saveSettingsButton.on('click', this.saveRedirectSettings.bind(this));
+    this.iphonePermission.on('click', () => {
+      if (typeof DeviceMotionEvent.requestPermission === "function") {
+        DeviceMotionEvent.requestPermission();
+      }
+    });
   }
   gtfo() {
-    let searchDestination = localStorage.getItem('searchEngine') ? "https://" + localStorage.getItem('searchEngine') + ".com" : "https://google.com";
-    searchDestination += '/search?q=';
-    searchDestination += localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm').replace(/ /g, '+') : "baby+sloths";
+    let searchDestination = localStorage.getItem('newsPreference') ? "https://" + localStorage.getItem('newsPreference') + ".com" : "https://cnn.com";
     localStorage.clear();
     // console.log('gtfo and going to ' + searchDestination);
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_preredirectBlankScreen').removeClass('dvSaferEscape-hidden');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferEscape_preredirectBlankScreen').removeClass('dvSaferEscape_hidden');
     setTimeout(() => {
       window.open(searchDestination, '_blank');
       window.location.replace(searchDestination);
@@ -81,28 +83,19 @@ class SaferRedirect {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').removeClass('dvSaferEscape_no-scroll');
   }
   openSaferEscapeOverlay() {
-    let searchEngine = localStorage.getItem('searchEngine');
-    let searchTerm = localStorage.getItem('searchTerm');
+    let newsPreference = localStorage.getItem('newsPreference');
     this.overlay.removeClass('dvSaferEscape_invisible');
     this.redirectSettingsIcon.addClass('dvSaferEscape_invisible');
-    if (searchEngine !== '' && searchEngine !== null) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()('.dvSaferEscape_search-options').removeClass('dvSaferEscape_search-option-selected');
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(`button[data-name="${searchEngine}"]`).addClass('dvSaferEscape_search-option-selected');
-    }
-    if (searchTerm !== '' && searchTerm !== null) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferSearch_search-input').val(searchTerm);
+    if (newsPreference !== '' && newsPreference !== null) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('input[name="dvSaferEscape_redirect-selection"][value="' + newsPreference + '"]').checked = true;
+    } else {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('input[name="dvSaferEscape_redirect-selection"][value="cnn"]').attr('checked', true);
     }
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').addClass('dvSaferEscape_no-scroll');
   }
-  selectOption(e) {
-    this.searchEngineOptions.removeClass('dvSaferEscape_search-option-selected');
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).addClass('dvSaferEscape_search-option-selected');
-  }
   saveRedirectSettings() {
-    let searchEngine = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.dvSaferEscape_search-option-selected').data('name');
-    let searchTerm = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#dvSaferSearch_search-input').val();
-    localStorage.setItem('searchEngine', searchEngine);
-    localStorage.setItem('searchTerm', searchTerm);
+    let newsPreference = jquery__WEBPACK_IMPORTED_MODULE_0___default()('input[name="dvSaferEscape_redirect-selection"]:checked').val();
+    localStorage.setItem('newsPreference', newsPreference);
     this.closeSaferEscapeOverlay();
   }
 }

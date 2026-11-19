@@ -7,8 +7,8 @@ class SaferRedirect{
         this.overlayClose = $('#dvSaferEscape_safety-overlay-close');
         this.redirectSettingsIcon = $('#dvSaferEscape_settings-icon');
         this.escapeHatch = $('#dvSaferEscape_safety-exit');
-        this.searchEngineOptions = $('.dvSaferEscape_search-options');
         this.saveSettingsButton = $('#dvSaferEscape_save-settings');
+        this.iphonePermission = $('#dvSaferEscape_iphone-prompt');
         this.events();
         let idleTimer;
         document.addEventListener("visibilitychange", ()=>{
@@ -24,8 +24,8 @@ class SaferRedirect{
         });
         window.onload = ()=>{
             clearTimeout(idleTimer);
-            let searchTerm = localStorage.getItem('searchTerm');
-            if (searchTerm == "" || searchTerm == null){
+            let newsPreference = localStorage.getItem('newsPreference');
+            if (newsPreference == "" || newsPreference == null){
                 this.openSaferEscapeOverlay();
             }
         };
@@ -44,17 +44,19 @@ class SaferRedirect{
             this.openSaferEscapeOverlay();
         });
         this.escapeHatch.on('click', this.gtfo.bind(this));
-        this.searchEngineOptions.on('click', this.selectOption.bind(this));
         this.saveSettingsButton.on('click', this.saveRedirectSettings.bind(this));
+        this.iphonePermission.on('click', ()=>{
+            if (typeof DeviceMotionEvent.requestPermission === "function") {
+                DeviceMotionEvent.requestPermission();
+            }
+        })
     }
 
     gtfo(){
-        let searchDestination = localStorage.getItem('searchEngine') ? "https://" + localStorage.getItem('searchEngine') + ".com" : "https://google.com";
-        searchDestination += '/search?q=';
-        searchDestination += localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm').replace(/ /g, '+') : "baby+sloths";
+        let searchDestination = localStorage.getItem('newsPreference') ? "https://" + localStorage.getItem('newsPreference') + ".com" : "https://cnn.com";
         localStorage.clear();
         // console.log('gtfo and going to ' + searchDestination);
-        $('#dvSaferEscape_preredirectBlankScreen').removeClass('dvSaferEscape-hidden');
+        $('#dvSaferEscape_preredirectBlankScreen').removeClass('dvSaferEscape_hidden');
         setTimeout(()=>{
             window.open(searchDestination, '_blank');
             window.location.replace(searchDestination);
@@ -68,30 +70,20 @@ class SaferRedirect{
     }
 
     openSaferEscapeOverlay(){
-        let searchEngine = localStorage.getItem('searchEngine');
-        let searchTerm = localStorage.getItem('searchTerm');
+        let newsPreference = localStorage.getItem('newsPreference');
         this.overlay.removeClass('dvSaferEscape_invisible');
         this.redirectSettingsIcon.addClass('dvSaferEscape_invisible');
-        if (searchEngine !== '' && searchEngine !== null){
-            $('.dvSaferEscape_search-options').removeClass('dvSaferEscape_search-option-selected');
-            $(`button[data-name="${searchEngine}"]`).addClass('dvSaferEscape_search-option-selected');
-        }
-        if (searchTerm !== '' && searchTerm !== null){
-            $('#dvSaferSearch_search-input').val(searchTerm);
+        if (newsPreference !== '' && newsPreference !== null){
+            $('input[name="dvSaferEscape_redirect-selection"][value="' + newsPreference + '"]').checked = true;
+        } else {
+            $('input[name="dvSaferEscape_redirect-selection"][value="cnn"]').attr('checked', true);
         }
         $('body').addClass('dvSaferEscape_no-scroll');
     }
 
-    selectOption(e){
-        this.searchEngineOptions.removeClass('dvSaferEscape_search-option-selected');
-        $(e.target).addClass('dvSaferEscape_search-option-selected');
-    }
-
     saveRedirectSettings(){
-        let searchEngine = $('.dvSaferEscape_search-option-selected').data('name');
-        let searchTerm = $('#dvSaferSearch_search-input').val();
-        localStorage.setItem('searchEngine', searchEngine);
-        localStorage.setItem('searchTerm', searchTerm);
+        let newsPreference = $('input[name="dvSaferEscape_redirect-selection"]:checked').val();
+        localStorage.setItem('newsPreference', newsPreference);
         this.closeSaferEscapeOverlay();
     }
 }

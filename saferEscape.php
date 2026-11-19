@@ -43,26 +43,58 @@ class DVSaferEscapePlugin {
 
     function addSaferEscapeInstructionsOverlay(){
         $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
-        $paragraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.');
+        $headingText = empty($headingText) ? 'An Important Safety Message' : $headingText;
+        $paragraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects they are thinking about leaving. This is true even if the abuser has never been physically violent before.');
+        $paragraphText = empty($paragraphText) ? 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects they are thinking about leaving. This is true even if the abuser has never been physically violent before.' : $paragraphText;
         ?><div id="dvSaferEscape_safety-overlay" class="dvSaferEscape_invisible">
             <button id="dvSaferEscape_safety-overlay-close">close</button>
             <div id="dvSaferEscape_safety-info">
                 <h1><?php echo esc_html($headingText); ?></h1>
                 <p><?php echo esc_html($paragraphText); ?></p>
                 <p>
-                    This site was built with safety precautions to keep visitors safe. Pressing the “EXIT” button on the bottom of the screen will redirect you to a search results page.
+                    This site was built with safety precautions to keep visitors safe. Pressing the “EXIT” button on the bottom of the screen will redirect you to a news site.
                 </p>
                 <p>
-                    To minimize suspicion, we want to redirect you to a search results page that wouldn't be out of the ordinary for you. Please select your favorite search engine and type a phrase that you would normally search for.  
+                    To minimize suspicion, we want to redirect you to a news site you would normally visit. Please select your favorite.  
                 </p>
-                <div id="dvSaferEscape_search-section">
-                    <div id="dvSaferEscape_search-options-section">
-                        <button id="dvSaferEscape_google" class="dvSaferEscape_search-options dvSaferEscape_search-option-selected" aria-label="selected" data-name="google">Google</button>
-                        <button id="dvSaferEscape_bing" class="dvSaferEscape_search-options" aria-label="not selected" data-name="bing">Bing</button>
-                        <button id="dvSaferEscape_duckduckgo" class="dvSaferEscape_search-options" aria-label="not selected" data-name="duckduckgo">DuckDuckGo</button>
-                    </div>
-                    <input type="text" id="dvSaferSearch_search-input" placeholder="baby sloths">
-                </div>                
+                <div id="dvSaferEscape_redirect-selection-options">
+                    <input
+                    type="radio"
+                    id="cnn"
+                    name="dvSaferEscape_redirect-selection"
+                    value="cnn"
+                    className="redirect-option"
+                    />
+                    <label htmlFor="cnn">CNN</label>
+                    <br>
+                    <input
+                    type="radio"
+                    id="nbcnews"
+                    name="dvSaferEscape_redirect-selection"
+                    value="nbcnews"
+                    className="redirect-option"
+                    />
+                    <label htmlFor="nbcnews">NBC News</label>
+                    <br>
+                    <input
+                    type="radio"
+                    id="foxnews"
+                    name="dvSaferEscape_redirect-selection"
+                    value="foxnews"
+                    className="redirect-option"
+                    />
+                    <label htmlFor="foxnews">Fox News</label>
+                    <br>
+                    <input
+                    type="radio"
+                    id="aljazeera"
+                    name="dvSaferEscape_redirect-selection"
+                    value="aljazeera"
+                    className="redirect-option"
+                    />
+                    <label htmlFor="aljazeera">Al Jazeera</label>
+                    <br>
+                </div>              
                 <p>
                     We will redirect you to a search results page if we detect any sudden jerking motions from your mobile phone. If you are using an iPhone, please tap <span id="dvSaferEscape_iphone-prompt">here</span> so we can ask you for permission to access information about your device’s motion. (Note: the motion-based redirection has only been tested with Chrome, Edge, Safari, and Firefox browsers.)
                 </p>
@@ -107,7 +139,9 @@ class DVSaferEscapePlugin {
                 $textColor = get_option('escape_button_text_color', '#faf6ea');
                 $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
                 $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
-                $paragraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.');
+                $headingText = empty($headingText) ? 'An Important Safety Message' : $headingText;
+                $paragraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects they are thinking about leaving. This is true even if the abuser has never been physically violent before.');
+                $paragraphText = empty($paragraphText) ? 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects they are thinking about leaving. This is true even if the abuser has never been physically violent before.' : $paragraphText;
                 $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
                 ?><table class="form-table">
                     <br>
@@ -198,7 +232,7 @@ class DVSaferEscapePlugin {
         register_setting('dvSaferEscape-settings-group', 'dvSaferEscape_overlay_intro_paragraph', array(
             'type' => 'string',
             'sanitize_callback' => array($this, 'sanitize_dvSaferEscape_options'),
-            'default' => 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.',
+            'default' => 'Victims of any type of abuse are at an increased risk of being killed when the abuser suspects they are thinking about leaving. This is true even if the abuser has never been physically violent before.',
         ));
         register_setting('dvSaferEscape-settings-group', 'instruction_overlay_button_outline_color', array(
             'type' => 'string',
@@ -212,7 +246,7 @@ class DVSaferEscapePlugin {
         $textColor = get_option('escape_button_text_color', '#faf6ea');
         $buttonPlacement = get_option('dvSaferEscape_button-placement', 'bottom-full');
         // $headingText = get_option('dvSaferEscape_overlay_heading', 'An Important Safety Message');
-        // $introParagraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects that the victim is thinking about leaving. This is true even if the abuser has never been physically violent before.');
+        // $introParagraphText = get_option('dvSaferEscape_overlay_intro_paragraph', 'Victims of any type of abuse are at an increased risk of being killed by their abusers when the abuser suspects they are thinking about leaving. This is true even if the abuser has never been physically violent before.');
         $buttonOutlineColor = get_option('instruction_overlay_button_outline_color', '#32153f');
         $custom_css = "
             #dvSaferEscape_safety-exit{
